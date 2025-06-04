@@ -3,20 +3,21 @@
 
 **Timed combo-triggered reset mod for PlayStation 1 using PIC16F18325/26, with LED feedback and controller-safe IGR logic.**
 
-Originally based on the *"PlayStation 1 Reset Mod"* by pyroesp (2019), this version expands functionality with non-blocking feedback, combo hold detection, and dual LED support.
+Originally based on the [**pyroesp / PlayStation-1-Reset-Mod**](https://github.com/pyroesp/PlayStation-1-Reset-Mod) (2019), 
+this version expands functionality with non-blocking feedback, combo hold detection, and dual LED support.
 
 ---
 
 ## Features
 
-- Combo hold logic to prevent unintentional resets
-- Combo feedback LED driven by asynchronous Timer0 interrupt
-- Reset feedback LED blink handled via the same non-blocking mechanism
-- Support for PSU-mounted common-anode dual LED (RA5 control only)
-- Optional support for 2-pin bicolor LED between RA4 and RA5 (dual-color feedback)
-- Safe reset duration with post-reset lockout period
-- Controller and GunCon combo support (based on ID)
-- Behavior and timings fully configurable via `#define` macros
+- ✅ Combo hold logic to prevent unintentional resets
+- ✅ Combo feedback LED driven by asynchronous Timer0 interrupt
+- ✅ Reset feedback LED blink handled via the same non-blocking mechanism
+- ✅ Support for PSU-mounted common-anode dual LED (RA5 control only)
+- ✅ Optional support for 2-pin bicolor LED between RA4 and RA5 (dual-color feedback)
+- ✅ Safe reset duration with post-reset lockout period
+- ✅ Controller and GunCon combo support (based on ID)
+- ✅ Behavior and timings fully configurable via `#define` macros
 
 ---
 
@@ -25,8 +26,6 @@ Originally based on the *"PlayStation 1 Reset Mod"* by pyroesp (2019), this vers
 You can modify these constants in `main.c` to adjust behavior:
 
 ```c
-#define SHORT_DELAY           500  // ms - Standard reset duration
-#define LONG_DELAY            2    // s  - Extended reset duration
 #define COMBO_HOLD           1250  // ms - Time combo must be held to trigger reset
 #define RESET_BLINK_COUNT       3  // Number of blink cycles after reset
 #define RESET_BLINK_TOTAL_MS  500  // ms - Total blink duration
@@ -58,7 +57,7 @@ You can modify these constants in `main.c` to adjust behavior:
 
 ## LED Wiring Options
 
-> **⚠️ Always use one 150 Ω resistor in series with LED output.**
+> **⚠️ Always use one 100-120 Ω resistor in series with LED output.**
 
 ### 🔴 RA5 alone (cathode sinking)
 Use RA5 for a single LED (any color), or for the red side of a dual-color setup:
@@ -114,13 +113,18 @@ No source compilation is required if using the `.hex`.
 
 ## License
 
-This project is distributed under the terms of the **GNU General Public License v2** or later.
+This is a derivative work based on the original [PlayStation 1 Reset Mod](https://github.com/pyroesp/PlayStation-1-Reset-Mod), 
+which is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](https://creativecommons.org/licenses/by-sa/4.0/).
 
-> Based on *"PlayStation 1 Reset Mod"* by **pyroesp (2019)**  
+---
+
+## Credits
+
+> Based on *PlayStation 1 Reset Mod* by **pyroesp (2019)**  
 > Modified and extended by **Electroanalog (2025)**
 
 ---
 
 ## Topics / Tags
 
-`psx` `playstation` `igr` `reset-mod` `pic16f18325` `modchip` `led-feedback` `guncon` `xstation`
+`ps1` `psx` `playstation` `igr` `reset-mod` `pic16f18325` `pic16f18326` `modchip` `led-feedback` `guncon` `xstation`

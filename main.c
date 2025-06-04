@@ -38,7 +38,7 @@
  * 13 - RA0 = ICSP DAT
  * 14 - VSS = GND
  *
- * LED usage options: (Use a 150 ohm resistor!)
+ * LED usage options: (Use a 100-120 ohm resistor!)
  *   RA5 alone supports:
  *     - Single red LED ("K" to RA5, "A" to PSU +3.5V)
  *     - Red terminal of a 3-pin common-anode LED (e.g., from PSU)
