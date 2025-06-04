@@ -35,7 +35,7 @@ You can modify these constants in `main.c` to adjust behavior:
 
 ---
 
-## IC16F18325/26 Pinout
+## PIC16F18325/26 Pinout
 
 | Pin | Name | Function |
 |-----|------|----------|
