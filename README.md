@@ -3,7 +3,8 @@
 
 **Timed combo-triggered reset mod for PlayStation 1 using PIC16F18325/26, with LED feedback and controller-safe IGR logic.**
 
-Originally based on the *"PlayStation 1 Reset Mod"* by pyroesp (2019), this version expands functionality with non-blocking feedback, combo hold detection, and dual LED support.
+Originally based on the [**pyroesp / PlayStation-1-Reset-Mod**](https://github.com/pyroesp/PlayStation-1-Reset-Mod) (2019), 
+this version expands functionality with non-blocking feedback, combo hold detection, and dual LED support.
 
 ---
 
@@ -25,8 +26,6 @@ Originally based on the *"PlayStation 1 Reset Mod"* by pyroesp (2019), this vers
 You can modify these constants in `main.c` to adjust behavior:
 
 ```c
-#define SHORT_DELAY           500  // ms - Standard reset duration
-#define LONG_DELAY            2    // s  - Extended reset duration
 #define COMBO_HOLD           1250  // ms - Time combo must be held to trigger reset
 #define RESET_BLINK_COUNT       3  // Number of blink cycles after reset
 #define RESET_BLINK_TOTAL_MS  500  // ms - Total blink duration
@@ -58,7 +57,7 @@ You can modify these constants in `main.c` to adjust behavior:
 
 ## LED Wiring Options
 
-> **⚠️ Always use one 150 Ω resistor in series with LED output.**
+> **⚠️ Always use one 100-120 Ω resistor in series with LED output.**
 
 ### 🔴 RA5 alone (cathode sinking)
 Use RA5 for a single LED (any color), or for the red side of a dual-color setup:
@@ -123,4 +122,4 @@ This project is distributed under the terms of the **GNU General Public License 
 
 ## Topics / Tags
 
-`psx` `playstation` `igr` `reset-mod` `pic16f18325` `modchip` `led-feedback` `guncon` `xstation`
+`ps1` `psx` `playstation` `igr` `reset-mod` `pic16f18325` `pic16f18326` `modchip` `led-feedback` `guncon` `xstation`
