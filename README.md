@@ -127,4 +127,5 @@ which is licensed under the [Creative Commons Attribution-ShareAlike 4.0 Interna
 
 ## Topics / Tags
 
-`ps1` `psx` `playstation` `igr` `reset-mod` `pic16f18325` `pic16f18326` `modchip` `led-feedback` `guncon` `xstation`
+`ps1` `psx` `playstation` `igr` `reset-mod` `pic16f18325` `pic16f18326` `modchip` `led-feedback` `guncon` `xstation` `diy-console-mod` `retro-gaming`
+
