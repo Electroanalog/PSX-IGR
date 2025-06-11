@@ -5,14 +5,9 @@
  *
  * Based on original code for "PlayStation 1 Reset Mod" by pyroesp (2019)
  * ------------------------------------------------------------------------
- * This is a derivative work licensed under the GNU General Public 
- * License as published by the Free Software Foundation; either 
- * version 2 of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This is a derivative work licensed under the Creative Commons 
+ * Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+ * Full license text: https://creativecommons.org/licenses/by-sa/4.0/legalcode.
  *
  * This version features:
  * - Combo hold logic to prevent unintentional resets
