@@ -110,30 +110,57 @@ No source compilation is required if using the `.hex`.
 ## LED Wiring Options
 
 > [!IMPORTANT]
-> **Always use one 100–120 Ω resistor in series with the RA5 output pin.**  
-> This applies to all LED configurations, whether using a single LED or a dual-color setup.
+> Always use a **100 Ω resistor** in series with the **RA5 (pin 2)** output.  
+> This applies to all LED configurations: standalone red, 3-pin common-anode, or 2-pin bicolor.
 
-### 🔴 RA5 alone (cathode sinking)
-Use RA5 for a single LED (any color), or for the red side of a dual-color setup:
-- Single LED: `K` to RA5, `A` to PSU +3.5V (standalone)
-- Red terminal of a 3-pin common-anode LED
-- Red side of a 2-pin bicolor LED (when used with RA4)
+### LED Configurations Overview
+
+#### 🔴 RA5 (pin 2) - Red Output (Mandatory)
+- Drives red LED for **combo feedback** and **reset blink**.
+- Must always be used, either alone or with RA4.
+- Compatible with:
+  - **3-pin common-anode LED**: Red cathode to RA5 via 100 Ω resistor.
+  - **Single-color LED**: Anode to VCC, cathode to RA5 via 100 Ω resistor.
 
 > [!TIP]
-> For 3-pin common-anode LEDs, if the green cathode is tied directly to PSU, a 1–2 kΩ resistor can be added in series with the green `K` connection to reduce brightness and match the red level.
+> For 3-pin common-anode LEDs:  
+> Replace the **original PSU resistor** (typically 120-130 Ω) in series with the **green cathode** with a **470 Ω resistor**.  
+> This reduces the green brightness to better match the red LED (driven by RA5), providing more balanced LED feedback.
 
-### 🟢🔴 RA4 with RA5 (2-pin bicolor only)  
+#### 🟢 RA4 (pin 3) - Green Output (Optional)
+- Used **only** when connecting a **2-pin bicolor LED (antiparallel)** between **RA4** and **RA5**.
+- Provides idle green indication; RA4 does not blink during reset.
+- Do **not** connect RA4 to the green terminal (cathode) of a 3-pin common-anode LED:  
+  - RA4 is not meant to drive LEDs directly to GND.  
+  - It only functions as part of a polarity-switching pair (RA4–RA5) for 2-pin bicolor LEDs.  
+  - Using RA4 for a discrete green LED will result in incorrect or no indication.
+
+> [!WARNING]
+> RA4 is **not suitable** for standalone LED use.  
+> It only works correctly in conjunction with RA5 using a 2-pin bicolor LED.
+
+---
+
+### LED Assignment Table
+
+| System State          | RA4 (pin 3) 🟢 | RA5 (pin 2) 🔴 | 2-Pin Bicolor LED (antiparallel) | Single Red LED or 3-Pin Red Terminal |
+|-----------------------|----------------|-----------------|----------------------------------|--------------------------------------|
+| Idle (system on)      | LO             | HI              | 🟢 Green                         | ⚪ OFF                              |
+| Combo detected        | HI             | LO              | 🔴 Red                           | 🔴 ON                               |
+| Reset (triggered)     | HI             | LO/HI           | 🔴 Blinking                      | 🔴 Blinking                         |
+| Post-reset delay      | LO             | LO              | ⚪ OFF                           | ⚪ OFF                              |
+| Idle (after reset)    | LO             | HI              | 🟢 Green                         | ⚪ OFF                              |
+| *RA4 only active*     | HI             | HI              | ⚪ OFF                           | Do not use                           |
+
+---
+
+### Summary
+
 > [!NOTE]
-> A single 100–120 Ω resistor is sufficient and should be placed in series with either side of the bicolor LED.  
-> Only one resistor is needed (on RA4 or RA5). Adding a second is optional and typically only used for brightness balancing.
-
-Use RA4 **only** in conjunction with RA5 when using a 2-pin bicolor LED:
-- RA4 = 0, RA5 = 1 → Green (idle)
-- RA4 = 1, RA5 = 0 → Red (combo/reset)
-- During reset blink: RA5 toggles, RA4 remains OFF (no green blink)  
-
-> [!WARNING] 
-> RA4 should **not** be used for single LEDs. It does not indicate reset blink and provides incorrect behavior alone.  
+> - 🔴 **RA5** handles all meaningful LED signaling (combo, reset blink).  
+> - 🟢 **RA4** is used **only** for idle indication when using a 2-pin bicolor LED.  
+> - When using a **3-pin LED**, never connect RA4 to the green terminal.  
+> - For **single red LEDs**, connect anode to VCC and cathode to RA5 via 100 Ω resistor.
 
 ---
 
