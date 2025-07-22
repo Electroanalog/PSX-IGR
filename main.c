@@ -5,9 +5,14 @@
  *
  * Based on original code for "PlayStation 1 Reset Mod" by pyroesp (2019)
  * ------------------------------------------------------------------------
- * This is a derivative work licensed under the Creative Commons 
- * Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
- * Full license text: https://creativecommons.org/licenses/by-sa/4.0/legalcode.
+ * This is a derivative work licensed under the GNU General Public 
+ * License as published by the Free Software Foundation; either 
+ * version 2 of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * This version features:
  * - Combo hold logic to prevent unintentional resets
@@ -33,15 +38,9 @@
  * 13 - RA0 = ICSP DAT
  * 14 - VSS = GND
  *
- * LED usage options: (Use a 100-120 ohm resistor!)
- *   RA5 alone supports:
- *     - Single red LED ("K" to RA5, "A" to PSU +3.5V)
- *     - Red terminal of a 3-pin common-anode LED (e.g., from PSU)
- *     - Or as red terminal in a 2-pin bicolor LED (with RA4)
- *   RA4 -> 2-pin bicolor LED:
- *     - Use only in conjunction with RA5
- *     - Not suitable for standalone LED use
- *     - Does not show blink state during reset (remains OFF while RA5 toggles)
+ * For installation instructions, wiring options, and usage details,
+ * please refer to the official README at:
+ * https://www.electroanalog.com/psx-igr
  */
 
 #include <xc.h>
@@ -81,9 +80,11 @@
 #define LED_A     LATA4 // LED output ([+] anode-driven | RA4 active high)
 #define LED_K     LATA5 // LED output ([-] cathode-driven | RA5 active low)
 // Unified control macros for both LED output control
-#define LED_ON()	do { LED_A = 1; LED_K = 0; } while(0) // Red ON (RA4 -> RA5)
-#define LED_IDLE()	do { LED_A = 0; LED_K = 1; } while(0) // Green ON (RA4 <- RA5)
-#define LED_OFF()	do { LED_A = 0; LED_K = 0; } while(0) // LED OFF (RA4-RA5 low)
+#define LED_BLINK_ON()  do { LED_K = 0; } while(0) // Blink ON (RA5 LOW)
+#define LED_BLINK_OFF() do { LED_K = 1; } while(0) // Blink OFF (RA5 HIGH)
+#define LED_IDLE()		do { TRISA4 = 0; TRISA5 = 0; LED_A = 0; LED_K = 1; } while(0) // Idle LED ON (RA4 LOW, RA5 HIGH)
+#define LED_COMBO()		do { TRISA4 = 0; TRISA5 = 0; LED_A = 1; LED_K = 0; } while(0) // Combo LED ON (RA4 HIGH, RA5 LOW)
+#define LED_OFF()		do { TRISA4 = 1; TRISA5 = 1; } while(0) // RA4 and RA5 as inputs (Hi-Z)
 
 /* Debug Configuration */
 /* Uncomment the define below to have UART TX debugging on RC3 */
@@ -101,7 +102,7 @@
 #define LONG_DELAY 2 // s | System Reset
 #define COMBO_HOLD 1250 // ms | Ensures intentional reset activation through timed hold
 #define RESET_BLINK_COUNT 3 // LED cycle
-#define RESET_BLINK_TOTAL_MS 500 // ms | Flash time
+#define RESET_BLINK_TOTAL_MS 500 // ms
 #define RESET_BLINK_DELAY_MS 200 // ms | Delay after blink before returning to idle
 
 // Reset port
@@ -249,9 +250,9 @@ void __interrupt() _sys_int(void) {
             	blink_timer_ms = 0;		// Reset phase timer
             	blink_led_state ^= 1;	// Toggle state
             	if (blink_led_state) { 	// Count cycles 
-                    LED_ON();
+                    LED_BLINK_ON();          // RA5 LOW = LED ON (red)
                 } else {
-                    LED_OFF();
+                    LED_BLINK_OFF();         // RA5 HIGH = LED OFF
                 	blink_count++;
                 	if (blink_count >= RESET_BLINK_COUNT) {
                     	blink_active = 0;
@@ -260,6 +261,7 @@ void __interrupt() _sys_int(void) {
             	}
         	}
     	} else if (blink_idle_delay > 0) {
+            LED_OFF(); // LED OFF on delay
     		blink_idle_delay--;
     		if (blink_idle_delay == 0) {
         		LED_IDLE(); // Turn on idle LED after delay
@@ -302,7 +304,7 @@ void main(void){
     TRISA4 = 0;	// RA4 output ([+] A)
     TRISA5 = 0;	// RA5 output ([-] K)
     
-    // Initialize LED to idle (LED_K = ON)
+    // Initialize LED to idle (green ON)
     LED_IDLE();
     
     // SPI I/O
@@ -486,7 +488,7 @@ uint8_t process_key_combo_reset(void) {
         (data.switches == KEY_COMBO_CTRL || data.switches == KEY_COMBO_XSTATION))
     );   
     if (valid_combo) {
-        LED_ON();	// Turn on LED while a valid combo is being held 
+        LED_COMBO();       // Turn on combo LED with RA4=HIGH and RA5=LOW for bicolor LED
         if (!last_active) {
             hold_time = 0;
             t0_ms_count = 0;
@@ -499,7 +501,7 @@ uint8_t process_key_combo_reset(void) {
             triggered   = 1;
             hold_time   = 0;
             last_active = 0;
-            LED_IDLE();	// LED to idle state after reset is triggered
+            LED_OFF(); // LED to off state after reset is triggered
         }
     } else {
         // Clear hold state if no valid controller/combo is active
@@ -518,7 +520,9 @@ void reset_blink(void) {
     blink_count      = 0;
     blink_timer_ms   = 0;
     blink_led_state  = 0;
-    LED_OFF(); 
+    LED_OFF(); // RA4-RA5 Hi-Z to fully turn off LED
+    TRISA4 = 0; // Set RA4 as output for idle/combo
+    TRISA5 = 0; // Set RA5 as output for blink
 }
 
 // Combo reset handler with controlled duration and LED feedback
