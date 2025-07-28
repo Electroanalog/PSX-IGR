@@ -177,10 +177,9 @@ No source compilation is required if using the `.hex`.
 
 ### Summary
 
-> [!NOTE]
-> - 🔴 **RA5** is the primary output for LED signaling, handling both **combo detection** and **reset blink**.
-> - 🟢 **RA4** acts as a secondary output and only contributes when using a **2-pin bicolor (antiparallel)** LED connected between **RA4 and RA5**.
-> - 🟡 For **single LEDs**, connect the **anode (A) to VCC** and the **cathode (K) to RA5** via a **100-470 Ω resistor**.
+- 🔴 **RA5** is the primary output for LED signaling, handling both **combo detection** and **reset blink**.
+- 🟢 **RA4** acts as a secondary output and only contributes when using a **2-pin bicolor (antiparallel)** LED connected between **RA4 and RA5**.
+- 🟡 For **single LEDs**, connect the **anode (A) to VCC** and the **cathode (K) to RA5** via a **100-470 Ω resistor**.
 
 <details>
 <summary> <b>Example wiring for a 3-pin common-anode LED (Red/Green) - Click to expand</b> </summary>
